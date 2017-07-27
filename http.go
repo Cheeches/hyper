@@ -78,7 +78,6 @@ func ExtractCommand(r *http.Request) Command {
 		}
 		return c
 	default:
-		c.Action = ExtractProfile(r.Header)
 		err := json.NewDecoder(r.Body).Decode(&c.Arguments)
 		if err != nil {
 			return c
@@ -167,19 +166,6 @@ func (a Arguments) Bool(key string) bool {
 	default:
 		return false
 	}
-}
-
-func ExtractProfile(h http.Header) string {
-	return ParseProfile(h.Get(HeaderContentType))
-}
-
-func ParseProfile(contentType string) string {
-	ct := ContentType{}
-	err := ct.Parse(contentType)
-	if err != nil {
-		return ""
-	}
-	return ct.Parameters["profile"]
 }
 
 func ExtractContentType(h http.Header) (ContentType, error) {
