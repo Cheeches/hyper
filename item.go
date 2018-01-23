@@ -59,7 +59,7 @@ func (i *Item) AddActions(as Actions) {
 // Items represents a collection of Item
 type Items []Item
 
-// Find returns an Item that satifies the specification
+// Find returns an Item that satisfies the specification
 func (is Items) Find(isSatisfiedBy func(Item) bool) (Item, bool) {
 	for _, i := range is {
 		if isSatisfiedBy(i) {
