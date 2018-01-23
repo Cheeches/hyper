@@ -1,9 +1,10 @@
 package hyper
 
-// Item has properties, links, actions and (sub-)actions.
+// Item has properties, links, actions, (sub-)items and errors.
 type Item struct {
 	Label       string     `json:"label,omitempty"`
 	Description string     `json:"description,omitempty"`
+	Render      string     `json:"render,omitempty"`
 	Rel         string     `json:"rel,omitempty"`
 	ID          string     `json:"id,omitempty"`
 	Type        string     `json:"type,omitempty"`
@@ -13,7 +14,6 @@ type Item struct {
 	Actions     Actions    `json:"actions,omitempty"`
 	Items       Items      `json:"items,omitempty"`
 	Errors      Errors     `json:"errors,omitempty"`
-	Render      string     `json:"render,omitempty"`
 }
 
 // AddProperty add a Property to this Item

@@ -4,6 +4,7 @@ package hyper
 type Action struct {
 	Label        string     `json:"label,omitempty"`
 	Description  string     `json:"description,omitempty"`
+	Render       string     `json:"render,omitempty"`
 	Rel          string     `json:"rel"`
 	Href         string     `json:"href,omitempty"`
 	Encoding     string     `json:"encoding,omitempty"`
@@ -14,7 +15,6 @@ type Action struct {
 	OK           string     `json:"ok,omitempty"`
 	Cancel       string     `json:"cancel,omitempty"`
 	Confirmation string     `json:"confirmation,omitempty"`
-	Render       string     `json:"render,omitempty"`
 }
 
 // Actions .
@@ -32,14 +32,19 @@ func (as Actions) Swap(i, j int) {
 	as[i], as[j] = as[j], as[i]
 }
 
-// FindByRel .
-func (as Actions) FindByRel(rel string) (Action, bool) {
-	for _, l := range as {
-		if l.Rel == rel {
-			return l, true
+// Find .
+func (as Actions) Find(f func(Action) bool) (Action, bool) {
+	for _, a := range as {
+		if f(a) {
+			return a, true
 		}
 	}
 	return Action{}, false
+}
+
+// FindByRel .
+func (as Actions) FindByRel(rel string) (Action, bool) {
+	return as.Find(ActionRelEquals(rel))
 }
 
 // Filter .
@@ -51,6 +56,17 @@ func (as Actions) Filter(f func(Action) bool) Actions {
 		}
 	}
 	return filtered
+}
+
+// FilterByRel .
+func (as Actions) FilterByRel(rel string) Actions {
+	return as.Filter(ActionRelEquals(rel))
+}
+
+func ActionRelEquals(rel string) func(Action) bool {
+	return func(a Action) bool {
+		return rel == a.Rel
+	}
 }
 
 const (

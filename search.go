@@ -1,6 +1,6 @@
 package hyper
 
-// Search performs a DFS with the goal to find an Item by the specified id
+// Search performs a DFS with the goal to find an item by the specified id
 func Search(root Item, id string) (Item, bool) {
 	frontier := []Item{root}
 	for len(frontier) > 0 {
@@ -9,7 +9,7 @@ func Search(root Item, id string) (Item, bool) {
 		if next.ID == id {
 			return next, true
 		}
-		frontier = append(frontier, next.Items...)
+		frontier = append(next.Items, frontier...)
 	}
 	return Item{}, false
 }

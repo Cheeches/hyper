@@ -2,14 +2,14 @@ package hyper
 
 // Property represents part of a domain state
 type Property struct {
+	Label       string      `json:"label,omitempty"`
+	Description string      `json:"description,omitempty"`
+	Render      string      `json:"render,omitempty"`
 	Name        string      `json:"name"`
 	Value       interface{} `json:"value"`
 	Type        string      `json:"type,omitempty"`
 	Unit        string      `json:"unit,omitempty"`
-	Label       string      `json:"label,omitempty"`
-	Description string      `json:"description,omitempty"`
 	Display     string      `json:"display,omitempty"`
-	Render      string      `json:"render,omitempty"`
 }
 
 // Properties is a collection of Property

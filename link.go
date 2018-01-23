@@ -4,6 +4,7 @@ package hyper
 type Link struct {
 	Label          string     `json:"label,omitempty"`
 	Description    string     `json:"description,omitempty"`
+	Render         string     `json:"render,omitempty"`
 	Rel            string     `json:"rel"`
 	Href           string     `json:"href,omitempty"`
 	Type           string     `json:"type,omitempty"`
@@ -11,7 +12,6 @@ type Link struct {
 	Template       string     `json:"template,omitempty"`
 	Parameters     Parameters `json:"parameters,omitempty"`
 	Context        string     `json:"context,omitempty"`
-	Render         string     `json:"render,omitempty"`
 	Accept         string     `json:"accept,omitempty"`
 	AcceptLanguage string     `json:"accept-language,omitempty"`
 }
@@ -19,34 +19,39 @@ type Link struct {
 // Links .
 type Links []Link
 
-// FindByRel .
-func (ls Links) FindByRel(rel string) (Link, bool) {
+// Find .
+func (ls Links) Find(f func(Link) bool) (Link, bool) {
 	for _, l := range ls {
-		if l.Rel == rel {
+		if f(l) {
 			return l, true
 		}
 	}
 	return Link{}, false
 }
 
-//FindRelated .
-func (ls Links) FindRelated(rel string) Links {
-	result := Links{}
-	for _, l := range ls {
-		if l.Rel == rel {
-			result = append(result, l)
-		}
-	}
-	return result
+// FindByRel .
+func (ls Links) FindByRel(rel string) (Link, bool) {
+	return ls.Find(LinkRelEquals(rel))
 }
 
 // Filter .
 func (ls Links) Filter(f func(Link) bool) Links {
-	filtered := []Link{}
+	var filtered Links
 	for _, l := range ls {
 		if f(l) {
 			filtered = append(filtered, l)
 		}
 	}
 	return filtered
+}
+
+//FilterByRel .
+func (ls Links) FilterByRel(rel string) Links {
+	return ls.Filter(LinkRelEquals(rel))
+}
+
+func LinkRelEquals(rel string) func(Link) bool {
+	return func(l Link) bool {
+		return rel == l.Rel
+	}
 }
