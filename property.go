@@ -25,6 +25,7 @@ func (ps Properties) Find(name string) (Property, bool) {
 	return Property{}, false
 }
 
+// KeyBy calculates a map keyed by the result of the extractKey funktion.
 func (ps Properties) KeyBy(extractKey func(Property) string) map[string]Property {
 	if len(ps) == 0 {
 		return nil

@@ -79,6 +79,7 @@ func (is Items) FindByRel(rel string) (Item, bool) {
 	return is.Find(ItemRelEquals(rel))
 }
 
+// KeyBy calculates a map keyed by the result of the extractKey funktion.
 func (is Items) KeyBy(extractKey func(Item) string) map[string]Item {
 	if len(is) == 0 {
 		return nil

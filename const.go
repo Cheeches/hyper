@@ -1,9 +1,10 @@
 package hyper
 
 const (
-	// TypeHidden is for hidden Parameters
+	// TypeHidden is for hidden parameters
 	TypeHidden = "hidden"
-	TypeText   = "text"
+	// TypeText is used for parameters of type text/string
+	TypeText = "text"
 )
 
 const (

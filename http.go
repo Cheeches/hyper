@@ -11,23 +11,28 @@ import (
 	"strings"
 )
 
+// HTTP headers as registered with IANA.
+// See: https://tools.ietf.org/html/rfc7231
 const (
-	HeaderContentType = "Content-Type"
+	HeaderContentType = "Content-Type" // RFC 7231, 3.1.1.5
 )
 
+// HTTP content types
 const (
-	ContentTypeHyperItem     = "application/vnd.hyper-item+json"
-	ContentTypeHyperItemUTF8 = "application/vnd.hyper-item+json;charset=UTF-8"
-	ContentTypeJSON          = "application/json"
-	ContentTypeURLEncoded    = "application/x-www-form-urlencoded"
+	ContentTypeHyperItem     = "application/vnd.hyper-item+json"               // https://github.com/mdemuth/hyper-item
+	ContentTypeHyperItemUTF8 = "application/vnd.hyper-item+json;charset=UTF-8" // https://github.com/mdemuth/hyper-item
+	ContentTypeJSON          = "application/json"                              // https://tools.ietf.org/html/rfc8259
+	ContentTypeURLEncoded    = "application/x-www-form-urlencoded"             // http://www.w3.org/TR/html
 )
 
+// Write writes a hyper-item to the response writer with the given status code.
 func Write(w http.ResponseWriter, i Item, status int) {
 	w.Header().Set(HeaderContentType, ContentTypeHyperItemUTF8)
 	w.WriteHeader(status)
 	json.NewEncoder(w).Encode(i)
 }
 
+// WriteError writes a hyper-item representation of the error to the response writer with the given status code.
 func WriteError(w http.ResponseWriter, err error, status int) {
 	type errorCoder interface {
 		Code() string
@@ -237,7 +242,7 @@ func Recover(next http.Handler) http.Handler {
 }
 
 func clearHeader(h http.Header) {
-	for k, _ := range h {
+	for k := range h {
 		h.Del(k)
 	}
 }
