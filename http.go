@@ -26,14 +26,14 @@ const (
 )
 
 // Write writes a hyper-item to the response writer with the given status code.
-func Write(w http.ResponseWriter, i Item, status int) {
+func Write(w http.ResponseWriter, status int, i Item) {
 	w.Header().Set(HeaderContentType, ContentTypeHyperItemUTF8)
 	w.WriteHeader(status)
 	json.NewEncoder(w).Encode(i)
 }
 
 // WriteError writes a hyper-item representation of the error to the response writer with the given status code.
-func WriteError(w http.ResponseWriter, err error, status int) {
+func WriteError(w http.ResponseWriter, status int, err error) {
 	type errorCoder interface {
 		Code() string
 	}
@@ -44,7 +44,7 @@ func WriteError(w http.ResponseWriter, err error, status int) {
 		e.Code = errC.Code()
 	}
 
-	Write(w, Item{Errors: Errors{e}}, status)
+	Write(w, status, Item{Errors: Errors{e}})
 }
 
 const NameAction = "@action"
@@ -232,7 +232,7 @@ func Recover(next http.Handler) http.Handler {
 		defer func() {
 			if err := recover(); err != nil {
 				clearHeader(w.Header())
-				WriteError(w, fmt.Errorf("recovered from: %v", err), http.StatusInternalServerError)
+				WriteError(w, http.StatusInternalServerError, fmt.Errorf("recovered from: %v", err))
 				return
 			}
 		}()
