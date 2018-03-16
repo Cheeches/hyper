@@ -1,5 +1,10 @@
 package hyper
 
+import (
+	"fmt"
+	"net/http"
+)
+
 // Action .
 type Action struct {
 	Label        string     `json:"label,omitempty"`
@@ -67,6 +72,30 @@ func ActionRelEquals(rel string) func(Action) bool {
 	return func(a Action) bool {
 		return rel == a.Rel
 	}
+}
+
+// ExtractProfile
+func ExtractProfile(h http.Header) Profile {
+	return ParseProfile(h.Get(HeaderContentType))
+}
+
+func ParseProfile(contentType string) Profile {
+	ct := ContentType{}
+	err := ct.Parse(contentType)
+	if err != nil {
+		return ""
+	}
+	return Profile(ct.Parameters["profile"])
+}
+
+type Profile string
+
+func ActionContentType(p Profile) string {
+	return fmt.Sprintf("application/action+json;profile=%s", p)
+}
+
+func ResourceContentType(p Profile) string {
+	return fmt.Sprintf("application/resource+json;charset=UTF-8;profile=%s", p)
 }
 
 const (
